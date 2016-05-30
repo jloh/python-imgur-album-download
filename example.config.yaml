@@ -1,0 +1,11 @@
+---
+# Imgur settings
+imgur_client_id: ''
+imgur_client_secret: ''
+imgur_image_url: 'https://i.imgur.com'
+
+# Filetype settings
+file_types:
+    'default': 'jpg'
+    'image/jpeg': 'jpg'
+    'image/gif': 'gif'
