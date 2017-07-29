@@ -55,4 +55,4 @@ $ ./imgur_downloader -a 3sHNB -a 5jBc45 -d ~/Wallpapers
 See [LICENSE](./LICENSE)
 
 # Credit
-Written by [James Loh](https://blog.jloh.co) ([@itsjloh](https://twitter.com/itsjloh))
+Written by [James Loh](https://jloh.co/l/blog) ([@itsjloh](https://twitter.com/itsjloh))

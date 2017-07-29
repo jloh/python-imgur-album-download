@@ -23,32 +23,6 @@ def load_config(config_file):
 
     return config
 
-def get_album_images(client, album_id):
-    """
-    Get album images from the Imgur API
-    """
-    album_images     = []
-    try:
-        album_images = client.get_album_images(album_id)
-
-    except ImgurClientError as e:
-        print('ERROR: {}'.format(e.error_message))
-        print('Status code {}'.format(e.status_code))
-
-    return album_images
-
-def get_image_extension(image):
-    """
-    Get image extension by converting mime-type from the Imgur API to a list in our config
-    """
-    if image.type in config['file_types']:
-        file_extension = config['file_types'].get(image.type)
-    else:
-        print("Error: unknown type '{}' assuming '{}'".format(image.type, config['file_types'].get('default')))
-        file_extension = config['file_types'].get('default')
-
-    return file_extension
-
 def download_image(image_url, download_path):
     """
     Download image and save it to file path
@@ -74,16 +48,26 @@ def main():
     client = ImgurClient(config['imgur_client_id'], config['imgur_client_secret'])
 
     for album in args.album:
-        images = get_album_images(client, album)
+        # Get our album images
+        try:
+            images = client.get_album_images(album)
+        except ImgurClientError as e:
+            print('ERROR: {}'.format(e.error_message))
+            print('Status code {}'.format(e.status_code))
+
         print("Downloading album {} ({!s} images)".format(album, len(images)))
+
+        # Download each image
         for image in images:
-            file_name     = '.'.join([image.id, get_image_extension(image)])
+            # Turn our link HTTPs
+            link      = image.link.replace("http://","https://")
+            # Get our file name that we'll save to disk
+            file_name = link.replace("https://i.imgur.com/","")
             download_path = os.path.join(args.directory, file_name)
-            download_url  = urljoin(config['imgur_image_url'], file_name)
             if os.path.isfile(download_path):
                 print("File exists for image {}, skipping...".format(file_name))
             else:
-                download_image(download_url, download_path)
+                download_image(link, download_path)
 
 if __name__ == '__main__':
     main()
