@@ -23,7 +23,7 @@ def load_config(config_file):
 
     return config
 
-def get_album_images(album_id):
+def get_album_images(client, album_id):
     """
     Get album images from the Imgur API
     """
@@ -59,14 +59,13 @@ def download_image(image_url, download_path):
         print("File {} downloaded to {}".format(image_url, download_path))
 
     except urllib.error.URLError as e:
-        print("Error downloading image '{}': {}".format(iamge_url, e))
+        print("Error downloading image '{}': {}".format(image_url, e))
     except urllib.error.HTTPError as e:
         print("HTTP Error download image '{}': {!s}".format(image_url, e))
 
 def main():
     global config
     global args
-    global client
 
     args   = parse_args()
     config = load_config(args.config)
@@ -75,7 +74,7 @@ def main():
     client = ImgurClient(config['imgur_client_id'], config['imgur_client_secret'])
 
     for album in args.album:
-        images = get_album_images(album)
+        images = get_album_images(client, album)
         print("Downloading album {} ({!s} images)".format(album, len(images)))
         for image in images:
             file_name     = '.'.join([image.id, get_image_extension(image)])
