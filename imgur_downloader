@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import argparse, os, sys, urllib, yaml
-from urlparse import urljoin
 from imgurpython import ImgurClient
 from imgurpython.helpers.error import ImgurClientError
 
